@@ -41,6 +41,12 @@ int main() {
 		unsigned char sw3_in = sw3Fetch();
 		unsigned char currentState = IDLE;
 		unsigned int time = 0; // time in seconds
+		unsigned int weight = 0; // weight used in Beef and Chicken
+		unsigned char time_1 = '0';
+		unsigned char time_2 = '0';
+		unsigned char time_3 = '0';
+		unsigned char time_4 = '0';
+		unsigned char arr[5] = {'0', '0', ':', '0', '0'}; // array of characters used in custom
 		switch(currentState) {
 		IDLE: 
 			if(input == 'A' || input == 'a') {
@@ -52,11 +58,13 @@ int main() {
 			} else if (input == 'D' || input == 'd') {
 				currentState = Custom;
 			} else {
-				lcdString("input error");
+				lcdString("Err");
 				wait(200); // wait for 2 seconds
+				LCDcommand(clear); // clear LCD
 			}
 			break;
 		Popcorn:
+			LCDcommand(clear);
 			lcdString("POPCORN, START?");
 			if(!(GPIO_PORTF_DATA_R & SW2)) {
 				while ((!(GPIO_PORTF_DATA_R & SW2))&&(/* door closed */)); // wait for the usr to lift his finger
@@ -64,30 +72,128 @@ int main() {
 				currentState = Cooking;
 			}
 			break;
+		
 		Beef:
-			lcdString("BEEF, KILOS?");
-			// fetching data from keypad to check number of kilos
+			do{       									 
+				LCDcommand(clear);
+				lcdString("Beef weight?");
+				LCDpos(0, 1); // cursor position
+				input = getchar();
+				weight = Intstr(input); // input weight from user
+				lcdString(input); // dispaly input
+				if(!(weight >=0 && weight <=9)){
+					LCDcommand(clear);
+					lcdString("Err");
+					wait(200);
+				} while(!(weight >=0 && weight <=9));
+			}
 			if(!(GPIO_PORTF_DATA_R & SW2)) {
 				while ((!(GPIO_PORTF_DATA_R & SW2))&&(/* door closed */)); // wait for the usr to lift his finger
+				time = 30 * weight; // set time for Beef
 				currentState = Cooking;
 			}
 			break;
+		
 		Chicken:
-			lcdString("CHICKEN, KILOS?");
-			// fetching data from keypad to check number of kilos
+			do{       									 
+				LCDcommand(clear);
+				lcdString("Chicken weight?");
+				LCDpos(0, 1); // cursor position
+				input = getchar();
+				weight = Intstr(input); // input weight from user
+				lcdString(input); // dispaly input
+				if(!(weight >=0 && weight <=9)){
+					LCDcommand(clear);
+					lcdString("Err"); // wrong input
+					wait(200);
+				} while(!(weight >=0 && weight <=9));
+			}
 			if(!(GPIO_PORTF_DATA_R & SW2)) {
 				while ((!(GPIO_PORTF_DATA_R & SW2))&&(/* door closed */)); // wait for the usr to lift his finger
+				time = 12 * weight; // set time for chicken
 				currentState = Cooking;
 			}
 			break;
+		
 		Custom:
-			lcdString("TIME?");
-			// fetching data from keypad to check time entered
-			if(!(GPIO_PORTF_DATA_R & SW2)) {
-				while ((!(GPIO_PORTF_DATA_R & SW2))&&(/* door closed */)); // wait for the usr to lift his finger
-				currentState = Cooking;
-			}
+			do{
+				LCDcommand(clear);
+				lcdString("Cooking Time?");
+				LCDpos(0, 1);
+				lcdString(arr);
+				if(!(GPIO_PORTF_DATA_R & SW1)) { 
+					while ((!(GPIO_PORTF_DATA_R & SW2))&&(/* door closed */)); // wait for the usr to lift his finger
+					LCDcommand(clear);
+				}
+				if(!(GPIO_PORTF_DATA_R & SW2)) {
+					while ((!(GPIO_PORTF_DATA_R & SW2))&&(/* door closed */)); // wait for the usr to lift his finger
+					time = custome_Time(arr); // function that read the input time
+					currentState = Cooking;
+				}
+				LCDpos(4, 1);
+				time_1 = getchar();
+				arr[4] = time_1;  
+				LCDpos(0, 1);
+				lcdString(arr); // 00:0(time_1)
+				if(!(GPIO_PORTF_DATA_R & SW1)) {
+					while ((!(GPIO_PORTF_DATA_R & SW2))&&(/* door closed */)); // wait for the usr to lift his finger
+					LCDcommand(clear);
+				}
+				if(!(GPIO_PORTF_DATA_R & SW2)) {
+					while ((!(GPIO_PORTF_DATA_R & SW2))&&(/* door closed */)); // wait for the usr to lift his finger
+					time = custome_Time(arr);
+					currentState = Cooking;
+				}
+				LCDpos(4, 1);
+				time_2 = getchar();
+				arr[4] = time_2;
+				arr[3] = time_1;
+				LCDpos(0, 1);
+				lcdString(arr); // 00:(time_1)(time_2)
+				if(!(GPIO_PORTF_DATA_R & SW1)) {
+					while ((!(GPIO_PORTF_DATA_R & SW2))&&(/* door closed */)); // wait for the usr to lift his finger
+					LCDcommand(clear);
+				}
+				if(!(GPIO_PORTF_DATA_R & SW2)) {
+					while ((!(GPIO_PORTF_DATA_R & SW2))&&(/* door closed */)); // wait for the usr to lift his finger
+					time = custome_Time(arr);
+					currentState = Cooking;
+				}
+				LCDpos(4, 1);
+				time_3 = getchar();
+				arr[4] = time_3;
+				arr[3] = time_2;
+				arr[1] = time_1;
+				LCDpos(0, 1);
+				lcdString(arr); // 0(time_1):(time_2)(time_3)
+				if(!(GPIO_PORTF_DATA_R & SW1)) {
+					while ((!(GPIO_PORTF_DATA_R & SW2))&&(/* door closed */)); // wait for the usr to lift his finger
+					LCDcommand(clear);
+				}
+				if(!(GPIO_PORTF_DATA_R & SW2)) {
+					while ((!(GPIO_PORTF_DATA_R & SW2))&&(/* door closed */)); // wait for the usr to lift his finger
+					time = custome_Time(arr);
+					currentState = Cooking;
+				}
+				LCDpos(4, 1);
+				time_4 = getchar();
+				arr[4] = time_4;
+				arr[3] = time_3;
+				arr[1] = time_2;
+				arr[0] = time_1;
+				LCDpos(0, 1);
+				lcdString(arr); // (time_1)(time_2):(time_3)(time_4)
+				if(!(GPIO_PORTF_DATA_R & SW1)) {
+					while ((!(GPIO_PORTF_DATA_R & SW2))&&(/* door closed */)); // wait for the usr to lift his finger
+					LCDcommand(clear);
+				}
+				if(!(GPIO_PORTF_DATA_R & SW2)) {
+					while ((!(GPIO_PORTF_DATA_R & SW2))&&(/* door closed */)); // wait for the usr to lift his finger
+					time = custome_Time(arr);
+					currentState = Cooking;
+				}
 			break;
+		
 		Cooking:
 			// always check for door (SW3)
 			unsigned int i = time;
