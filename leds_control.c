@@ -23,7 +23,7 @@ void set() {
     GPIO_PORTF_DATA_R |= 0x0E;
 }
 
-void blink() {
+void ledBlink() {
     clear();
     for (unsigned int i = 0 ; i < 5 ; i++) {
         GPIO_PORTF_DATA_R ^= 0x0E;

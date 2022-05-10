@@ -1,14 +1,17 @@
 #include "stdint.h"
 #include "popcorn.c" // for popcorn function
 #include "systick_delay.c"
+#include "getchar.c"
+#include "LCDinit.c"
+#include "portF_init.c"
+#include "sws_init.c"
+#include "systick_delay.c"
 
 #define SW1 0x01
 #define SW2 0x10
 
 void SystemInit() {} // needed in startup code file
 	
-
-unsigned char keypadFetch(void);
 unsigned char sw1Fetch(void);
 unsigned char sw2Fetch(void);
 unsigned char sw3Fetch(void);
@@ -25,9 +28,14 @@ enum state{
 };
 
 int main() {
+	LCDinit();
+	portFInit();
+	s1Init();
+	s2Init();
+	timerInit();
 	
 	while(1) {
-		unsigned char input = keypadFetch(); // fetching pressed key from keypad
+		unsigned char input = getchar(); // fetching pressed key from keypad
 		unsigned char sw1_in = sw1Fetch();
 		unsigned char sw2_in = sw2Fetch();
 		unsigned char sw3_in = sw3Fetch();
@@ -116,7 +124,7 @@ int main() {
 			break;
 		Pause:
 			while(1) {
-				blink();
+				ledBlink();
 				if(!(GPIO_PORTF_DATA_R & SW2)) {
 				while ((!(GPIO_PORTF_DATA_R & SW2))&&(/* door closed */)); // wait for the usr to lift his finger
 				currentState = Cooking;
