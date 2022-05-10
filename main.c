@@ -82,7 +82,8 @@ int main() {
 			break;
 		Cooking:
 			// always check for door (SW3)
-			for (unsigned int i = time ; i >= 0 ; i--) {
+			unsigned int i = time;
+			while (i >= 0) {
 				if(!(GPIO_PORTF_DATA_R & SW1)) {
 				while ((!(GPIO_PORTF_DATA_R & SW1))&&(/* door closed */)); // wait for the usr to lift his finger
 				currentState = Pause;
@@ -100,19 +101,36 @@ int main() {
 					timeFormat[1] = '0' + temp;
 				}
 				lcdString(timeFormat);
-				wait(100); // wait for one second
+				i--;
+				// then for 1 second delay and leds control
+				clear();
+				red();
+				wait(partOfSecond);
+				clear();
+				blue();
+				wait(partOfSecond);
+				clear();
+				green();
+				wait(part2OfSecond);
 			}
 			break;
 		Pause:
-			if(!(GPIO_PORTF_DATA_R & SW2)) {
+			while(1) {
+				blink();
+				if(!(GPIO_PORTF_DATA_R & SW2)) {
 				while ((!(GPIO_PORTF_DATA_R & SW2))&&(/* door closed */)); // wait for the usr to lift his finger
 				currentState = Cooking;
-			}
-			else if (!(GPIO_PORTF_DATA_R & SW1)) {
+				break;
+				}
+				else if (!(GPIO_PORTF_DATA_R & SW1)) {
 				while ((!(GPIO_PORTF_DATA_R & SW1))&&(/* door closed */)); // wait for the usr to lift his finger
 				currentState = IDLE;
+				break;
+				}
+				else {
+					break;
+				}
 			}
-			else {}
 		}
 
 	}
