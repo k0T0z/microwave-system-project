@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #include "stdint.h"
 #include "popcorn.c" // for popcorn function
 #include "systick_delay.c"
@@ -141,3 +142,11 @@ int main() {
 
 
 
+=======
+
+
+int main() {
+	
+}
+
+>>>>>>> master
