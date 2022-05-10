@@ -139,6 +139,7 @@ int main() {
 					break;
 				}
 			}
+			default: 
 		}
 
 	}
