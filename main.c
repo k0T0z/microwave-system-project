@@ -115,10 +115,17 @@ int main() {
 			break;
 		
 		Custom:
+			do{
 				LCDcommand(clearScreen);
 				lcdString("Cooking Time?");
 				LCDpos(0, 1);
 				lcdString(arr);
+				if (custome_Time(arr) == -1){
+					LCDcommand(clearScreen);
+					lcdString("Err");
+					wait(200);
+				}
+			} while(custome_Time(arr) == -1);
 				if(!(GPIO_PORTF_DATA_R & SW1)) { 
 					while ((!(GPIO_PORTF_DATA_R & SW2))&&(/* door closed */)); // wait for the usr to lift his finger
 					LCDcommand(clearScreen);
@@ -128,11 +135,19 @@ int main() {
 					time = custome_Time(arr); // function that read the input time
 					currentState = Cooking;
 				}
+				
+			do{	
 				LCDpos(4, 1);
 				time_1 = getchar();
 				arr[4] = time_1;  
 				LCDpos(0, 1);
 				lcdString(arr); // 00:0(time_1)
+				if (custome_Time(arr) == -1){
+					LCDcommand(clearScreen);
+					lcdString("Err");
+					wait(200);
+				}
+			} while(custome_Time(arr) == -1);
 				if(!(GPIO_PORTF_DATA_R & SW1)) {
 					while ((!(GPIO_PORTF_DATA_R & SW2))&&(/* door closed */)); // wait for the usr to lift his finger
 					LCDcommand(clearScreen);
@@ -142,12 +157,19 @@ int main() {
 					time = custome_Time(arr);
 					currentState = Cooking;
 				}
+			do{	
 				LCDpos(4, 1);
 				time_2 = getchar();
 				arr[4] = time_2;
 				arr[3] = time_1;
 				LCDpos(0, 1);
 				lcdString(arr); // 00:(time_1)(time_2)
+				if (custome_Time(arr) == -1){
+					LCDcommand(clearScreen);
+					lcdString("Err");
+					wait(200);
+				}
+			} while(custome_Time(arr) == -1);
 				if(!(GPIO_PORTF_DATA_R & SW1)) {
 					while ((!(GPIO_PORTF_DATA_R & SW2))&&(/* door closed */)); // wait for the usr to lift his finger
 					LCDcommand(clearScreen);
@@ -157,6 +179,7 @@ int main() {
 					time = custome_Time(arr);
 					currentState = Cooking;
 				}
+			do{
 				LCDpos(4, 1);
 				time_3 = getchar();
 				arr[4] = time_3;
@@ -164,6 +187,12 @@ int main() {
 				arr[1] = time_1;
 				LCDpos(0, 1);
 				lcdString(arr); // 0(time_1):(time_2)(time_3)
+				if (custome_Time(arr) == -1){
+					LCDcommand(clearScreen);
+					lcdString("Err");
+					wait(200);
+				}
+			} while(custome_Time(arr) == -1);
 				if(!(GPIO_PORTF_DATA_R & SW1)) {
 					while ((!(GPIO_PORTF_DATA_R & SW2))&&(/* door closed */)); // wait for the usr to lift his finger
 					LCDcommand(clearScreen);
@@ -173,6 +202,7 @@ int main() {
 					time = custome_Time(arr);
 					currentState = Cooking;
 				}
+			do{
 				LCDpos(4, 1);
 				time_4 = getchar();
 				arr[4] = time_4;
@@ -181,6 +211,12 @@ int main() {
 				arr[0] = time_1;
 				LCDpos(0, 1);
 				lcdString(arr); // (time_1)(time_2):(time_3)(time_4)
+				if (custome_Time(arr) == -1){
+					LCDcommand(clearScreen);
+					lcdString("Err");
+					wait(200);
+				}
+			} while(custome_Time(arr) == -1);
 				if(!(GPIO_PORTF_DATA_R & SW1)) {
 					while ((!(GPIO_PORTF_DATA_R & SW2))&&(/* door closed */)); // wait for the usr to lift his finger
 					LCDcommand(clearScreen);
@@ -194,12 +230,6 @@ int main() {
 		
 		Cooking:
 			// always check for door (SW3)
-			if(time == -1){
-				LCDcommand(clearScreen);
-				lcdString("Err"); // wrong input
-				wait(200);
-				currentState = Custom; // if time = -1 it means the user entered worng input in custom.
-			}
 			unsigned int i = time;
 			while (i >= 0) {
 				if(!(GPIO_PORTF_DATA_R & SW1)) {
