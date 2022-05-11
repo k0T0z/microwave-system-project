@@ -115,7 +115,6 @@ int main() {
 			break;
 		
 		Custom:
-			do{
 				LCDcommand(clearScreen);
 				lcdString("Cooking Time?");
 				LCDpos(0, 1);
@@ -191,14 +190,16 @@ int main() {
 					time = custome_Time(arr);
 					currentState = Cooking;
 				}
-			} 
-			
-			// where's the while part?
-
 			break;
 		
 		Cooking:
 			// always check for door (SW3)
+			if(time == -1){
+				LCDcommand(clearScreen);
+				lcdString("Err"); // wrong input
+				wait(200);
+				currentState = Custom; // if time = -1 it means the user intered worng input in custom.
+			}
 			unsigned int i = time;
 			while (i >= 0) {
 				if(!(GPIO_PORTF_DATA_R & SW1)) {
