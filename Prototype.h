@@ -6,7 +6,7 @@
 #define RW 0x2     // PORT B Pin 1
 #define Enable 0x4 // PORT B Pin 2
 
-#define Clear 0x1
+#define clearScreen 0x1 // changed name from Clear to clearScreen for bug fixes by saifkandil
 #define Cursorinit 0x80
 #define Secondline 0xC0
 #define Wakeup 0x30
