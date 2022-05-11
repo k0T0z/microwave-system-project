@@ -198,7 +198,7 @@ int main() {
 				LCDcommand(clearScreen);
 				lcdString("Err"); // wrong input
 				wait(200);
-				currentState = Custom; // if time = -1 it means the user intered worng input in custom.
+				currentState = Custom; // if time = -1 it means the user entered worng input in custom.
 			}
 			unsigned int i = time;
 			while (i >= 0) {
