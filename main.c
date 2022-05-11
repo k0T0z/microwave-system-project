@@ -1,10 +1,9 @@
 #include "stdint.h"
-#include "popcorn.c" // for popcorn function
 #include "systick_delay.c"
 #include "getchar.c"
 #include "LCDinit.c"
 #include "portF_init.c"
-#include "sws_init.c"
+#include "Cooking_Oprations.c"
 #include "systick_delay.c"
 #include "Prototype.h"
 
@@ -31,8 +30,7 @@ enum state{
 int main() {
 	LCDinit();
 	portFInit();
-	s1Init();
-	s2Init();
+	SW_Init();
 	timerInit();
 	
 	while(1) {
