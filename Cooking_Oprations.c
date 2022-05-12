@@ -48,7 +48,7 @@ bool isCooking = false;
 
 void start(){
     isCooking = true;
-
+    
     // decrement the timer for the first time 
 
 }
