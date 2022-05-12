@@ -31,13 +31,14 @@ int main() {
 	LCDinit();
 	portFInit();
 	SW_Init();
+	SW3_Init();
 	timerInit();
 	
 	while(1) {
 		unsigned char input = getchar(); // fetching pressed key from keypad
-		unsigned char sw1_in = sw1Fetch();
-		unsigned char sw2_in = sw2Fetch();
-		unsigned char sw3_in = sw3Fetch();
+		unsigned char sw1_in = get_SW1();
+		unsigned char sw2_in = get_SW2();
+		unsigned char sw3_in = get_SW3();
 		unsigned char currentState = IDLE;
 		unsigned int time = 0; // time in seconds
 		unsigned int weight = 0; // weight used in Beef and Chicken
