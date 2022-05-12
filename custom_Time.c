@@ -1,6 +1,6 @@
 
 
-int custome_Time(unsigned char arr[]){
+int time_to_second(unsigned char arr[]){
     int time1 = ((int)(arr[0]) - 48) * 600;
     int time2 = ((int)(arr[1]) - 48) * 60;
     int time3 = ((int)(arr[3]) - 48) * 10;

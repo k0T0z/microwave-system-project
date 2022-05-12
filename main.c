@@ -45,6 +45,7 @@ int main() {
 		unsigned char time_4 = '0';
 		unsigned char arr[5] = {'0', '0', ':', '0', '0'}; // array of characters used in custom state
 		switch(currentState) {
+/* ================================================================================================================================================================ */
 		IDLE: 
 			if(input == 'A' || input == 'a') {
 				currentState = Popcorn;
@@ -60,6 +61,7 @@ int main() {
 				LCDcommand(clearScreen); // clear LCD
 			}
 			break;
+/* ================================================================================================================================================================ */
 		Popcorn:
 			LCDcommand(clearScreen);
 			lcdString("POPCORN, START?");
@@ -69,6 +71,7 @@ int main() {
 				currentState = Cooking;
 			}
 			break;
+/* ================================================================================================================================================================ */
 		Beef:
 			do{ // getting a valid weight
 				LCDcommand(clearScreen);
@@ -97,6 +100,7 @@ int main() {
 				currentState = Cooking;
 			}
 			break;
+/* ================================================================================================================================================================ */
 		Chicken:
 			do{ // getting a valid weight
 				LCDcommand(clearScreen);
@@ -125,26 +129,27 @@ int main() {
 				currentState = Cooking;
 			}
 			break;
+/* ================================================================================================================================================================ */
 		Custom:
 			do{
 				LCDcommand(clearScreen);
 				lcdString("Cooking Time?");
 				LCDpos(0, 1);
 				lcdString(arr);
-				if (custome_Time(arr) == -1){
+				if (time_to_second(arr) == -1){
 					LCDcommand(clearScreen);
 					lcdString("Err");
 					wait(200);
 				}
-			} while(custome_Time(arr) == -1);
+			} while(time_to_second(arr) == -1);
 
-			if(!(GPIO_PORTF_DATA_R & SW1)) { 
-				while ((!(GPIO_PORTF_DATA_R & SW2))&&(/* door closed */)); // wait for the usr to lift his finger
+			if(!get_SW1()) { 
+				while (!get_SW1()); // wait for the usr to lift his finger
 				LCDcommand(clearScreen);
 			}
-			if(!(GPIO_PORTF_DATA_R & SW2)) {
+			if((!get_SW2())&&(get_SW3())) {
 				while ((!(GPIO_PORTF_DATA_R & SW2))&&(/* door closed */)); // wait for the usr to lift his finger
-				time = custome_Time(arr); // function that read the input time
+				time = time_to_second(arr); // function that read the input time
 				currentState = Cooking;
 			}
 				
@@ -154,12 +159,12 @@ int main() {
 				arr[4] = time_1;  
 				LCDpos(0, 1);
 				lcdString(arr); // 00:0(time_1)
-				if (custome_Time(arr) == -1){
+				if (time_to_second(arr) == -1){
 					LCDcommand(clearScreen);
 					lcdString("Err");
 					wait(200);
 				}
-			} while(custome_Time(arr) == -1);
+			} while(time_to_second(arr) == -1);
 
 			if(!(GPIO_PORTF_DATA_R & SW1)) {
 				while ((!(GPIO_PORTF_DATA_R & SW2))&&(/* door closed */)); // wait for the usr to lift his finger
@@ -167,7 +172,7 @@ int main() {
 			}
 			if(!(GPIO_PORTF_DATA_R & SW2)) {
 				while ((!(GPIO_PORTF_DATA_R & SW2))&&(/* door closed */)); // wait for the usr to lift his finger
-				time = custome_Time(arr);
+				time = time_to_second(arr);
 				currentState = Cooking;
 			}
 
@@ -178,12 +183,12 @@ int main() {
 				arr[3] = time_1;
 				LCDpos(0, 1);
 				lcdString(arr); // 00:(time_1)(time_2)
-				if (custome_Time(arr) == -1){
+				if (time_to_second(arr) == -1){
 					LCDcommand(clearScreen);
 					lcdString("Err");
 					wait(200);
 				}
-			} while(custome_Time(arr) == -1);
+			} while(time_to_second(arr) == -1);
 
 			if(!(GPIO_PORTF_DATA_R & SW1)) {
 				while ((!(GPIO_PORTF_DATA_R & SW2))&&(/* door closed */)); // wait for the usr to lift his finger
@@ -191,7 +196,7 @@ int main() {
 			}
 			if(!(GPIO_PORTF_DATA_R & SW2)) {
 				while ((!(GPIO_PORTF_DATA_R & SW2))&&(/* door closed */)); // wait for the usr to lift his finger
-				time = custome_Time(arr);
+				time = time_to_second(arr);
 				currentState = Cooking;
 			}
 
@@ -203,12 +208,12 @@ int main() {
 				arr[1] = time_1;
 				LCDpos(0, 1);
 				lcdString(arr); // 0(time_1):(time_2)(time_3)
-				if (custome_Time(arr) == -1){
+				if (time_to_second(arr) == -1){
 					LCDcommand(clearScreen);
 					lcdString("Err");
 					wait(200);
 				}
-			} while(custome_Time(arr) == -1);
+			} while(time_to_second(arr) == -1);
 
 			if(!(GPIO_PORTF_DATA_R & SW1)) {
 				while ((!(GPIO_PORTF_DATA_R & SW2))&&(/* door closed */)); // wait for the usr to lift his finger
@@ -216,7 +221,7 @@ int main() {
 			}
 			if(!(GPIO_PORTF_DATA_R & SW2)) {
 				while ((!(GPIO_PORTF_DATA_R & SW2))&&(/* door closed */)); // wait for the usr to lift his finger
-				time = custome_Time(arr);
+				time = time_to_second(arr);
 				currentState = Cooking;
 			}
 
@@ -229,12 +234,12 @@ int main() {
 				arr[0] = time_1;
 				LCDpos(0, 1);
 				lcdString(arr); // (time_1)(time_2):(time_3)(time_4)
-				if (custome_Time(arr) == -1){
+				if (time_to_second(arr) == -1){
 					LCDcommand(clearScreen);
 					lcdString("Err");
 					wait(200);
 				}
-			} while(custome_Time(arr) == -1);
+			} while(time_to_second(arr) == -1);
 
 			if(!(GPIO_PORTF_DATA_R & SW1)) {
 				while ((!(GPIO_PORTF_DATA_R & SW2))&&(/* door closed */)); // wait for the usr to lift his finger
@@ -242,12 +247,12 @@ int main() {
 			}
 			if(!(GPIO_PORTF_DATA_R & SW2)) {
 				while ((!(GPIO_PORTF_DATA_R & SW2))&&(/* door closed */)); // wait for the usr to lift his finger
-				time = custome_Time(arr);
+				time = time_to_second(arr);
 				currentState = Cooking;
 			}
 
 			break;
-		
+/* ================================================================================================================================================================ */
 		Cooking:
 			LCDcommand(clearScreen);
 			unsigned int temp_time = time; // temporary copy of time variable
@@ -305,6 +310,7 @@ int main() {
 				currentState = IDLE;
 			}
 			break;
+/* ================================================================================================================================================================ */
 		Pause:
 			// no clearing screen here, we need to keep time on screen
 			while(1) {
@@ -321,6 +327,7 @@ int main() {
 				}
 			}
 			break;
+/* ================================================================================================================================================================ */
 		default:
 			printf("");
 		}
