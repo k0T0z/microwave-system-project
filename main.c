@@ -12,7 +12,7 @@ void SystemInit() {} // needed in startup code file
 
 void one_sec_delay_loading() {
 	off(); // for turning all the leds off
-	red();
+	red(); // turning red led on
 	wait(partOfSecond);
 	off();
 	blue();
@@ -39,8 +39,8 @@ int main() {
 	SW3_Init();
 	timerInit();
 	
-	unsigned char input;
-	unsigned static char currentState = IDLE;
+	unsigned char input; // keypad data will be passed here
+	unsigned static char currentState = IDLE; // initialised to IDLE state
 	unsigned int time = 0; // time in seconds
 	unsigned int weight = 0; // weight used in Beef and Chicken states
 	unsigned char time_1 = '0';
@@ -53,10 +53,10 @@ int main() {
 
 		switch(currentState) {
 /* ================================================================================================================================================================ */
-		IDLE:
+		IDLE: // main state
 			while(1) { // fetching pressed key from keypad
 				input = getchar();
-				if(input!=0) {
+				if(input!=0) { // getchar() returns 0 if nothing is pressed so if the return is not zero break out of the loop
 					break;
 				}
 			}
@@ -76,12 +76,12 @@ int main() {
 			break;
 /* ================================================================================================================================================================ */
 		Popcorn:
-			LCDcommand(clearScreen);
-			lcdString("POPCORN, START?");
+			LCDcommand(clearScreen); // clear the screen
+			lcdString("POPCORN, START?"); // print on the LCD
 			if((!get_SW2())&&(get_SW3())) { // if sw2 is pressed (start) and sw3 is not pressed (door closed)
 				while (!get_SW2()); // wait for the user to lift his finger
 				time = 60; // one minute for popcorn
-				currentState = Cooking;
+				currentState = Cooking; // change currentState variable to cooking state, then the switch case will end and enter again in the new state (cooking)
 			}
 			break;
 /* ================================================================================================================================================================ */
