@@ -9,12 +9,9 @@
 
 #define SW1 0x01
 #define SW2 0x10
+#define SW3 0x20
 
 void SystemInit() {} // needed in startup code file
-	
-unsigned char sw1Fetch(void);
-unsigned char sw2Fetch(void);
-unsigned char sw3Fetch(void);
 
 
 enum state{
@@ -66,19 +63,21 @@ int main() {
 		Popcorn:
 			LCDcommand(clearScreen);
 			lcdString("POPCORN, START?");
-			if(!(GPIO_PORTF_DATA_R & SW2)) {
-				while ((!(GPIO_PORTF_DATA_R & SW2))&&(/* door closed */)); // wait for the usr to lift his finger
-				time = 60;
+			if(!get_SW2()) { // if sw2 is pressed (start)
+				while ((!get_SW2())&&(get_SW3())); // wait for the user to lift his finger
+				time = 60; // one minute for popcorn
 				currentState = Cooking;
 			}
 			break;
-		
 		Beef:
 			do{       									 
 				LCDcommand(clearScreen);
 				lcdString("Beef weight?");
 				LCDpos(0, 1); // cursor position
 				input = getchar();
+				
+				// Intstr waits for two arguments where's the second one?
+
 				weight = Intstr(input); // input weight from user
 				lcdString(input); // dispaly input
 				if(!(weight >=0 && weight <=9)){
@@ -87,13 +86,12 @@ int main() {
 					wait(200);
 				} 
 			} while(!(weight >=0 && weight <=9));
-			if(!(GPIO_PORTF_DATA_R & SW2)) {
-				while ((!(GPIO_PORTF_DATA_R & SW2))&&(/* door closed */)); // wait for the usr to lift his finger
-				time = 30 * weight; // set time for Beef
+			if((!get_SW2())&&(get_SW3())) { // if sw2 is pressed (start) and sw3 is not pressed (door closed)
+				while (!get_SW2()); // wait for the user to lift his finger
+				time = 30 * weight; // set time for Beef (0.5 minute for each kilo)
 				currentState = Cooking;
 			}
 			break;
-		
 		Chicken:
 			do{       									 
 				LCDcommand(clearScreen);
@@ -231,58 +229,78 @@ int main() {
 		
 		Cooking:
 			// always check for door (SW3)
-			unsigned int i = time;
-			while (i >= 0) {
-				if(!(GPIO_PORTF_DATA_R & SW1)) {
-				while ((!(GPIO_PORTF_DATA_R & SW1))&&(/* door closed */)); // wait for the usr to lift his finger
+			unsigned int temp_time = time; // temporary copy of time variable
+			while (1) {
+				if(!get_SW3()) {
+				while (!get_SW3()); // wait for the usr to lift his finger
 				currentState = Pause;
-				time = i;
+				time = temp_time; // saving the current time before changing current state
 				break;
 				}
-				char timeFormat[5];
-				unsigned int temp = i/60;
-				if(temp>9) {
-					timeFormat[0] = '0' + temp/10;
-					timeFormat[1] = '0' + temp%10;
+				if(!get_SW1()) {
+				while (!get_SW1()); // wait for the usr to lift his finger
+				currentState = Pause;
+				time = temp_time; // saving the current time before changing current state
+				break;
+				}
+				char timeFormat[5]; // 00:00
+				unsigned int minutes = temp_time/60; // getting number of minutes from time variable
+				unsigned int seconds = temp_time%60; // getting number of seconds from time variable
+				if(minutes>9) { // for minutes part
+					timeFormat[0] = '0' + minutes/10;
+					timeFormat[1] = '0' + minutes%10;
 				}
 				else {
 					timeFormat[0] = '0';
-					timeFormat[1] = '0' + temp;
+					timeFormat[1] = '0' + minutes;
 				}
+				if(seconds>9) { // for seconds part
+					timeFormat[3] = '0' + seconds/10;
+					timeFormat[4] = '0' + seconds%10;
+				}
+				else {
+					timeFormat[3] = '0';
+					timeFormat[4] = '0' + seconds;
+				}
+				timeFormat[2] = ':';
 				lcdString(timeFormat);
-				i--;
+				if(temp_time == 0) {
+					break;
+				}
+				temp_time--;
 				// then for 1 second delay and leds control
-				clear(); // for turning all the leds off
+				off(); // for turning all the leds off
 				red();
 				wait(partOfSecond);
-				clear();
+				off();
 				blue();
 				wait(partOfSecond);
-				clear();
+				off();
 				green();
 				wait(part2OfSecond);
+			}
+			if (temp_time == 0) {
+				LCDcommand(clearScreen); // for clearing the screen after cooking is done
+				currentState = IDLE;
 			}
 			break;
 		Pause:
 			while(1) {
 				ledBlink();
-				if(!(GPIO_PORTF_DATA_R & SW2)) {
-				while ((!(GPIO_PORTF_DATA_R & SW2))&&(/* door closed */)); // wait for the usr to lift his finger
-				currentState = Cooking;
-				break;
+				if((!get_SW2())&&(get_SW3())) { // if sw2 is pressed (start) and sw3 is not pressed (door closed)
+					while (!get_SW2()); // wait for the user to lift his finger
+					currentState = Cooking;
+					break;
 				}
-				else if (!(GPIO_PORTF_DATA_R & SW1)) {
-				while ((!(GPIO_PORTF_DATA_R & SW1))&&(/* door closed */)); // wait for the usr to lift his finger
-				currentState = IDLE;
-				break;
-				}
-				else {
+				else if (!get_SW1()) { // if sw1 is pressed (cancel cooking)
+					while (!get_SW1()); // wait for the user to lift his finger
+					currentState = IDLE;
 					break;
 				}
 			}
+			break;
 		default:
 			printf("");
-			
 		}
 		
 

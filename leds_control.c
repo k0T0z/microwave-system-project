@@ -15,7 +15,7 @@ void green() {
     GPIO_PORTF_DATA_R |= 0x08;
 }
 
-void clear() {
+void off() {
     GPIO_PORTF_DATA_R &= ~0x0E;
 }
 
