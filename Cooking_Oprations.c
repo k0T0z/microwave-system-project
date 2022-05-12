@@ -1,8 +1,13 @@
 
 #include "tm4c123gh6pm.h"
+<<<<<<< HEAD
 #include "stdint.h"
 
 void SystemInit() {};
+=======
+#include "stdbool.h"
+void SystemInit();
+>>>>>>> hema
 
 // intalize sw1,sw2 
 void SW_Init(void ){
