@@ -27,10 +27,10 @@ void LCDinit(void);
 void LCDstring(unsigned char *str, unsigned char len);
 void LCDcus(void);
 void LCDpos(uint8_t col, uint8_t row);
-
+void countdown(uint32_t time);
 unsigned char keypress(void);
 void keypadinit(void);
 unsigned char getkey(void);
 unsigned char getchar(void);
-
+unsigned char *Lcdshift(void);
 int Intstr(unsigned char *str, unsigned char len);

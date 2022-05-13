@@ -16,8 +16,7 @@ void SysTick_Wait(uint32_t delay)
     NVIC_ST_RELOAD_R = delay - 1; // number of counts (1 unit = 62.5 ns)
     NVIC_ST_CURRENT_R = 0;        // clear any value written to CURRENT
     while ((NVIC_ST_CTRL_R & 0x00010000) == 0)
-    { // wait for the COUNT flag 16th bit
-    }
+    { /* wait for the COUNT flag 16th bit */ }
 }
 
 void delayms(int n)
