@@ -171,7 +171,7 @@ int main() {
 			break;
 /* ================================================================================================================================================================ */
 		Custom:
-<<<<<<< HEAD
+
 			do{
 				LCDcommand(clearScreen);
 				lcdString("Cooking Time?");
@@ -184,7 +184,7 @@ int main() {
 					wait(200);
 				}
 			} while(time_to_second(arr) == -1);
-=======
+
 			 LCDcommand(clearScreen);
 			 lcdString("Cooking Time?");
 			 LCDpos(0,1);
@@ -196,7 +196,7 @@ int main() {
 				arr[4] = first_Input; // add the input in the proper location in the array
 				LCDpos(0, 1); // move cursor on LCD to bottom row first column
 				lcdString(arr); // 00:0(first_input)
->>>>>>> ab700ae91e9813aa01e0f0d216c7624f0a61bd5f
+
 
 				LCDpos(4, 1);
 				second_Input = getchar();
