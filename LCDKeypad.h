@@ -1,3 +1,6 @@
+#ifndef LCDKEYPAD_H
+#define LCDKEYPAD_H
+
 #include "tm4c123gh6pm.h"
 #include "stdint.h"
 #include "stdlib.h"
@@ -33,3 +36,5 @@ unsigned char keypress(void);
 void keypadinit(void);
 unsigned char getkey(void);
 unsigned char getchar(void);
+
+#endif
