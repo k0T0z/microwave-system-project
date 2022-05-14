@@ -272,13 +272,14 @@ int main() {
 					timeFormat[4] = '0' + seconds;
 				}
 				timeFormat[2] = ':';
-				lcdString(timeFormat);
+				lcdString(timeFormat); // Print <-
 				if(temp_time == 0) {
 					break;
 				}
 				temp_time--;
 				// then for 1 second delay and leds control
-				one_sec_delay_loading();
+				one_sec_delay_loading(); // Wait <--
+				LCDcommand(clearScreen); // Then clear <---
 			}
 			if (temp_time == 0) {
 				LCDcommand(clearScreen); // for clearing the screen after cooking is done then returning back to IDLE
