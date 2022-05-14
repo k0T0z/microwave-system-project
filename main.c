@@ -4,12 +4,11 @@
 #include "LCDinit.c"
 #include "portF_init.c"
 #include "Cooking_Oprations.c"
-#include "systick_delay.c"
 #include "Prototype.h"
-#include "lcs"
+#include "leds_control.c"
 
 
-void SystemInit() {} // needed in startup code file
+//void SystemInit() {} // needed in startup code file
 
 void one_sec_delay_loading() {
 	off(); // for turning all the leds off
@@ -39,7 +38,7 @@ int main() {
 	SW_Init();
 	SW3_Init();
 	timerInit();
-	
+
 	unsigned char input; // keypad data will be passed here
 	unsigned static char currentState = IDLE; // initialised to IDLE state
 	unsigned int time = 0; // time in seconds
@@ -71,7 +70,7 @@ int main() {
 			} else if (input == 'D' || input == 'd') {
 				currentState = Custom;
 			} else {
-				lcdString("Err");
+				LCDString("Err");
 				wait(200); // wait for 2 seconds
 				LCDcommand(clearScreen); // clear LCD
 			}
@@ -86,7 +85,7 @@ int main() {
 				currentState = Cooking; // change currentState variable to cooking state, then the switch case will end and enter again in the new state (cooking)
 				countdown(time);
 
-			
+
 			}
 			break;
 /* ================================================================================================================================================================ */
@@ -95,7 +94,7 @@ int main() {
 			LCDcommand(clearScreen);
 			lcdString("Beef weight?");
 			LCDpos(0, 1); // cursor position
-				
+
 			while(1) {
 				input = getchar();
 
@@ -109,14 +108,14 @@ int main() {
 					wait(200);
 				}
 			}
-			
+
 			// Intstr waits for two arguments where's the second one?
 
 			// input weight from user
-			
+
 			lcdString(input); // After a valid number is entered, clear the LCD display and show the value of the weight on the LCD for 2 seconds
 			wait(200);
-			
+
 			while (1) {
 				if((!get_SW2())&& get_SW3()) { // if sw2 is pressed (start) and sw3 is not pressed (door closed)
 					while (!get_SW2()); // wait for the user to lift his finger
@@ -124,7 +123,7 @@ int main() {
 					currentState = Cooking;
 					break;
 				}
-				else if (!get_SW1()) { // more functionality  pause 
+				else if (!get_SW1()) { // more functionality  pause
 					while (!get_SW1()); // wait for the user to lift his finger
 					currentState = IDLE;// it shall stops the timer
 					break;
@@ -133,7 +132,7 @@ int main() {
 			break;
 /* ================================================================================================================================================================ */
 		Chicken:
-			
+
 			LCDcommand(clearScreen);
 			lcdString("Chicken weight?");
 			LCDpos(0, 1); // cursor position
@@ -230,7 +229,7 @@ int main() {
 				LCDcommand(clearScreen);
 				}
 				if((!get_SW2())&&(get_SW3())) { //SW2 pressed and the door is closed ----> start cooking
-				while ((!(GPIO_PORTF_DATA_R & SW2))&&(/* door closed */)); // wait for the usr to lift his finger
+				while ((!(GPIO_PORTF_DATA_R & get_SW2()))&&(get_SW3())); // wait for the usr to lift his finger
 				time = time_to_second(arr); // function that transform the array to seconds
 				currentState = Cooking;
 		    	} break;
@@ -306,9 +305,9 @@ int main() {
 			break;
 /* ================================================================================================================================================================ */
 		default:
-			printf("default statement");
+			//printf("default statement");
 		}
 
 	}
-	
+
 }

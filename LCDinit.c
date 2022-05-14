@@ -28,6 +28,6 @@ void LCDinit(void)
     delayus(40);
     LCDcommand(fourbittwoline); // set 4-bit data, 2-line, 5x7 font
     LCDcommand(shiftright);     // move cursor right
-    LCDcommand(Clear);
+    LCDcommand(clearScreen); // Error 2
     LCDcommand(blink);
 }

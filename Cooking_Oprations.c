@@ -1,11 +1,9 @@
-
 #include "tm4c123gh6pm.h"
 #include "stdint.h"
-#include "stdbool.h"
 
 void SystemInit() {};
 
-// intalize sw1,sw2 
+// intalize sw1,sw2
 void SW_Init(void ){
     SYSCTL_RCGCGPIO_R |= 0x20; // PortF clock enable
     while ((SYSCTL_PRGPIO_R & 0x20)==0); //Delay
@@ -23,14 +21,14 @@ void SW_Init(void ){
 void SW3_Init(){
     SYSCTL_RCGCGPIO_R  |= 0x10; // Enable PortE
     while ((SYSCTL_PRGPIO_R &0x10)==0); //wait
-    GPIO_PORTE_LOCK_R = 0x4C4F434B; 
+    GPIO_PORTE_LOCK_R = 0x4C4F434B;
     GPIO_PORTE_CR_R |= 0x20;
     GPIO_PORTE_AMSEL_R &= ~0x20;
     GPIO_PORTE_PCTL_R &= ~0x00F00000;
     GPIO_PORTE_AFSEL_R &= ~0x20;
     GPIO_PORTE_DIR_R &= ~0x20;
     GPIO_PORTE_PUR_R |= 0x20;
-    GPIO_PORTE_DATA_R &= ~0x20; // PE5 = 0 -> closed door 
+    GPIO_PORTE_DATA_R &= ~0x20; // PE5 = 0 -> closed door
 }
 
 unsigned char get_SW1(){
@@ -43,36 +41,5 @@ unsigned char get_SW2(){
 unsigned char get_SW3(){
     return GPIO_PORTE_DATA_R & 0x20;
 }
-bool isCooking = false;
 
-// bool isOpen = false;
-
-
-void start(){
-    isCooking = true;
-    
-    // decrement the timer for the first time 
-
-}
-void pause(){
-    isCooking = false;
-    // stop the timer 
-    // blink leds 
-}
-void resume(){
-    isCooking = true;
-
-    // decrement the timer
-}
-void clear(){
-    isCooking = false; 
-    // clear the timer on lcd
-}
-void end(){
-    isCooking = false; 
-    // set timer 00:00:00
-    // leds should blinks  3 times
-    // buzzer should produce tone each time.
-
-}
 

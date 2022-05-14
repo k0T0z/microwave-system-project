@@ -33,4 +33,4 @@ void keypadinit(void);
 unsigned char getkey(void);
 unsigned char getchar(void);
 unsigned char *Lcdshift(void);
-int Intstr(unsigned char *str, unsigned char len);
+int Intstr(unsigned char *str);

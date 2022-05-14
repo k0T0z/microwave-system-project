@@ -1,4 +1,4 @@
-
+#include "Prototype.h" // Error 1
 // implements a debouncing algorithm
 //  to solve problems with get key function
 
@@ -19,7 +19,7 @@ unsigned char getchar(void)
     do
     {
         key = getkey();
-        
+
         delayms(20); // wait for debounce
     } while (getkey() != key);
 
