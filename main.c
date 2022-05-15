@@ -61,13 +61,13 @@ int main() {
 					break;
 				}
 			}
-			if(input == 'A' || input == 'a') {
+			if(input == 'A') {
 				currentState = Popcorn;
-			} else if (input == 'B' || input == 'b') {
+			} else if (input == 'B') {
 				currentState = Beef;
-			} else if (input == 'C' || input == 'c') {
+			} else if (input == 'C') {
 				currentState = Chicken;
-			} else if (input == 'D' || input == 'd') {
+			} else if (input == 'D') {
 				currentState = Custom;
 			} else {
 				LCDstring("Err");
@@ -79,12 +79,21 @@ int main() {
 		case Popcorn:
 			LCDcommand(Clear); // clear the screen
 			LCDstring("POPCORN, START?"); // print on the LCD
-			if((!get_SW2())&&(get_SW3())) { // if sw2 is pressed (start) and sw3 is not pressed (door closed)
+			while (1) {
+				if((!get_SW2())&&(get_SW3())) { // if sw2 is pressed (start) and sw3 is not pressed (door closed)
 				while (!get_SW2()); // wait for the user to lift his finger
 				time = 60; // one minute for popcorn
 				currentState = Cooking; // change currentState variable to cooking state, then the switch case will end and enter again in the new state (cooking)
-				countdown(time);
-				break;	
+				break;
+				}
+				else if (!get_SW1()) { // more functionality  pause
+					while (!get_SW1()); // wait for the user to lift his finger
+					LCDcommand(Clear);
+					LCDstring("Canceling");
+					wait(200);
+					currentState = IDLE;// it shall stops the timer
+					break;
+				}
 			}
 			break;
 /* ================================================================================================================================================================ */
@@ -97,7 +106,7 @@ int main() {
 			while(1) {
 				input = getchar();
 
-				weight = Intstr(input);
+				weight = input - 48; // '0' - 48 = 48 - 48 = 0
 				if(weight>=1 && weight <= 9) { // if it's a valid input, getout of the loop
 					break;
 				}
@@ -107,10 +116,6 @@ int main() {
 					wait(200);
 				}
 			}
-
-			// Intstr waits for two arguments where's the second one?
-
-			// input weight from user
 			
 			LCDstring(input); // After a valid number is entered, clear the LCD display and show the value of the weight on the LCD for 2 seconds
 			wait(200);
@@ -119,11 +124,14 @@ int main() {
 				if((!get_SW2())&& get_SW3()) { // if sw2 is pressed (start) and sw3 is not pressed (door closed)
 					while (!get_SW2()); // wait for the user to lift his finger
 					time = 30 * weight; // set time for Beef (0.5 minute for each kilo)
-					currentState = Cooking;
+					currentState = Cooking;d
 					break;
 				}
 				else if (!get_SW1()) { // more functionality  pause
 					while (!get_SW1()); // wait for the user to lift his finger
+					LCDcommand(Clear);
+					LCDstring("Canceling");
+					wait(200);
 					currentState = IDLE;// it shall stops the timer
 					break;
 				}
@@ -137,7 +145,7 @@ int main() {
 			LCDpos(0, 1); // cursor position
 			while(1) {
 				input = getchar();
-				weight = Intstr(input);
+				weight = input - 48; // '0' - 48 = 48 - 48 = 0
 				if(weight>=1 && weight <= 9) { // if it's a valid input, getout of the loop
 					break;
 				}
@@ -148,7 +156,6 @@ int main() {
 				}
 			}
 
-			// Intstr waits for two arguments where's the second one?
 			LCDstring(input); // After a valid number is entered, clear the LCD display and show the value of the weight on the LCD for 2 seconds
 			wait(200);
 			while(1) {
@@ -160,11 +167,12 @@ int main() {
 				}
 				else if(!get_SW1()) { // more functionality
 					while (!get_SW1()); // wait for the user to lift his finger
+					LCDcommand(Clear);
+					LCDstring("Canceling");
+					wait(200);
 					currentState = IDLE;
 					break;
 				}
-
-
 			}
 			break;
 /* ================================================================================================================================================================ */
@@ -236,6 +244,7 @@ int main() {
 /* ================================================================================================================================================================ */
 		case Cooking:
 			LCDcommand(Clear);
+			unsigned int temp_time = time;
 			while (1) {
 				if(!get_SW3()) { // check for door if it open 
 					while (!get_SW3()); // wait for the usr to lift his finger
@@ -280,6 +289,9 @@ int main() {
 			}
 			if (temp_time == 0) {
 				LCDcommand(Clear); // for clearing the screen after cooking is done then returning back to IDLE
+				
+				// buzzer functionality here @hema
+
 				currentState = IDLE;
 			}
 			break;
@@ -296,6 +308,9 @@ int main() {
 				}
 				else if (!get_SW1()) { // if sw1 is pressed (cancel cooking)
 					while (!get_SW1()); // wait for the user to lift his finger
+					LCDcommand(Clear);
+					LCDstring("Canceling");
+					wait(200);
 					currentState = IDLE;
 					break;
 				}
