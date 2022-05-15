@@ -17,18 +17,18 @@ void SW_Init(void ){
     GPIO_PORTF_DATA_R |= 0x11;// this to set sw1 , sw2 as the simulate being unclicked
 }
 
-//intialize switch 3 in PORT E5
+//intialize switch 3 in PORT A2
 void SW3_Init(){
-    SYSCTL_RCGCGPIO_R  |= 0x10; // Enable PortE
-    while ((SYSCTL_PRGPIO_R &0x10)==0); //wait
-    GPIO_PORTE_LOCK_R = 0x4C4F434B;
-    GPIO_PORTE_CR_R |= 0x20;
-    GPIO_PORTE_AMSEL_R &= ~0x20;
-    GPIO_PORTE_PCTL_R &= ~0x00F00000;
-    GPIO_PORTE_AFSEL_R &= ~0x20;
-    GPIO_PORTE_DIR_R &= ~0x20;
-    GPIO_PORTE_PUR_R |= 0x20;
-    GPIO_PORTE_DATA_R &= ~0x20; // PE5 = 0 -> closed door
+    SYSCTL_RCGCGPIO_R  |= 0x1; // Enable PortA
+    while ((SYSCTL_PRGPIO_R &0x01)==0); //wait
+    GPIO_PORTA_LOCK_R = 0x4C4F434B;
+    GPIO_PORTA_CR_R |= 0x04;//bit  2  1  0
+    GPIO_PORTA_AMSEL_R &= ~0x04;// 4  2  1
+    GPIO_PORTA_PCTL_R &= ~0x00000F00;
+    GPIO_PORTA_AFSEL_R &= ~0x04;
+    GPIO_PORTA_DIR_R &= ~0x04;
+    GPIO_PORTA_PUR_R |= 0x04;
+    GPIO_PORTA_DATA_R &= ~0x04; // PA2 = 0 -> closed door
 }
 
 unsigned char get_SW1(){
@@ -39,7 +39,7 @@ unsigned char get_SW2(){
 }
 
 unsigned char get_SW3(){
-    return GPIO_PORTE_DATA_R & 0x20;
+    return GPIO_PORTA_DATA_R & 0x04;
 }
 
 
