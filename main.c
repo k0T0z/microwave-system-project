@@ -4,12 +4,11 @@
 #include "LCDinit.c"
 #include "portF_init.c"
 #include "Cooking_Oprations.c"
-#include "systick_delay.c"
 #include "Prototype.h"
-#include "lcs"
+#include "leds_control.c"
 
 
-void SystemInit() {} // needed in startup code file
+//void SystemInit() {} // needed in startup code file
 
 void one_sec_delay_loading() {
 	off(); // for turning all the leds off
@@ -39,7 +38,7 @@ int main() {
 	SW_Init();
 	SW3_Init();
 	timerInit();
-	
+
 	unsigned char input; // keypad data will be passed here
 	unsigned static char currentState = IDLE; // initialised to IDLE state
 	unsigned int time = 0; // time in seconds
@@ -73,12 +72,12 @@ int main() {
 			} else {
 				LCDstring("Err");
 				wait(200); // wait for 2 seconds
-				LCDcommand(clearScreen); // clear LCD
+				LCDcommand(Clear); // clear LCD
 			}
 			break;
 /* ================================================================================================================================================================ */
 		case Popcorn:
-			LCDcommand(clearScreen); // clear the screen
+			LCDcommand(Clear); // clear the screen
 			LCDstring("POPCORN, START?"); // print on the LCD
 			if((!get_SW2())&&(get_SW3())) { // if sw2 is pressed (start) and sw3 is not pressed (door closed)
 				while (!get_SW2()); // wait for the user to lift his finger
@@ -86,16 +85,15 @@ int main() {
 				currentState = Cooking; // change currentState variable to cooking state, then the switch case will end and enter again in the new state (cooking)
 				countdown(time);
 				break;	
-			
 			}
 			break;
 /* ================================================================================================================================================================ */
 		case Beef:
 			// getting a valid weight
-			LCDcommand(clearScreen);
+			LCDcommand(Clear);
 			LCDstring("Beef weight?");
 			LCDpos(0, 1); // cursor position
-				
+
 			while(1) {
 				input = getchar();
 
@@ -104,19 +102,19 @@ int main() {
 					break;
 				}
 				else if (!(weight>=0 && weight <= 9)){ // if anything but zero and from 1 to 9 ([1,9]+{0})
-					LCDcommand(clearScreen);
+					LCDcommand(Clear);
 					LCDstring("Err");
 					wait(200);
 				}
 			}
-			
+
 			// Intstr waits for two arguments where's the second one?
 
 			// input weight from user
 			
 			LCDstring(input); // After a valid number is entered, clear the LCD display and show the value of the weight on the LCD for 2 seconds
 			wait(200);
-			
+
 			while (1) {
 				if((!get_SW2())&& get_SW3()) { // if sw2 is pressed (start) and sw3 is not pressed (door closed)
 					while (!get_SW2()); // wait for the user to lift his finger
@@ -124,7 +122,7 @@ int main() {
 					currentState = Cooking;
 					break;
 				}
-				else if (!get_SW1()) { // more functionality  pause 
+				else if (!get_SW1()) { // more functionality  pause
 					while (!get_SW1()); // wait for the user to lift his finger
 					currentState = IDLE;// it shall stops the timer
 					break;
@@ -132,9 +130,9 @@ int main() {
 			}
 			break;
 /* ================================================================================================================================================================ */
+
 		case Chicken:
-			
-			LCDcommand(clearScreen);
+			LCDcommand(Clear);
 			LCDstring("Chicken weight?");
 			LCDpos(0, 1); // cursor position
 			while(1) {
@@ -144,7 +142,7 @@ int main() {
 					break;
 				}
 				else if (!(weight>=0 && weight <= 9)){ // if anything but zero and from 1 to 9 ([1,9]+{0})
-					LCDcommand(clearScreen);
+					LCDcommand(Clear);
 					LCDstring("Err");
 					wait(200);
 				}
@@ -173,19 +171,19 @@ int main() {
 		case Custom:
 
 			do{
-				LCDcommand(clearScreen);
+				LCDcommand(Clear);
 				LCDstring("Cooking Time?");
 				lcdshift();
 				LCDpos(0, 1);
 				LCDstring(arr);
 				if (time_to_second(arr) == -1){
-					LCDcommand(clearScreen);
+					LCDcommand(Clear);
 					LCDstring("Err");
 					wait(200);
 				}
 			} while(time_to_second(arr) == -1);
 
-			 LCDcommand(clearScreen);
+			 LCDcommand(Clear);
 			 LCDstring("Cooking Time?");
 			 LCDpos(0,1);
 			 LCDstring(arr); // print default array "00:00"
@@ -227,17 +225,17 @@ int main() {
 
 				if(!get_SW1()) {  //SW1 pressed ---> clear LCD
 				while (!get_SW1()); // wait for the usr to lift his finger
-				LCDcommand(clearScreen);
+				LCDcommand(Clear);
 				}
 				if((!get_SW2())&&(get_SW3())) { //SW2 pressed and the door is closed ----> start cooking
-				while ((!(GPIO_PORTF_DATA_R & SW2))&&(/* door closed */)); // wait for the usr to lift his finger
+				while ((!(GPIO_PORTF_DATA_R & get_SW2()))&&(get_SW3())); // wait for the usr to lift his finger
 				time = time_to_second(arr); // function that transform the array to seconds
 				currentState = Cooking;
 		    	} break;
 			 }
 /* ================================================================================================================================================================ */
 		case Cooking:
-			LCDcommand(clearScreen);
+			LCDcommand(Clear);
 			while (1) {
 				if(!get_SW3()) { // check for door if it open 
 					while (!get_SW3()); // wait for the usr to lift his finger
@@ -278,10 +276,10 @@ int main() {
 				temp_time--;
 				// then for 1 second delay and leds control
 				one_sec_delay_loading(); // Wait <--
-				LCDcommand(clearScreen); // Then clear <---
+				LCDcommand(Clear); // Then clear <---
 			}
 			if (temp_time == 0) {
-				LCDcommand(clearScreen); // for clearing the screen after cooking is done then returning back to IDLE
+				LCDcommand(Clear); // for clearing the screen after cooking is done then returning back to IDLE
 				currentState = IDLE;
 			}
 			break;
@@ -309,5 +307,5 @@ int main() {
 		}
 
 	}
-	
+
 }

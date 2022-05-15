@@ -1,6 +1,6 @@
 #include "tm4c123gh6pm.h"
 #include "stdint.h"
-#include "consts.c" // for constants file
+//#include "consts.c" // for constants file
 
 void timerInit() { // initialisation of Systick Timer
 	NVIC_ST_CTRL_R = 0;

@@ -20,7 +20,7 @@ unsigned char getkey(void)
 
     while (1)
     {
-        row = 0; 
+        row = 0;
         GPIO_PORTE_DATA_R = 0x1D; // enable row 0 (negative logic 1st bit = 0)
         delayus(2);               // wait for signal to settle
         col = GPIO_PORTC_DATA_R & 0xF0;
