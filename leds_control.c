@@ -24,7 +24,7 @@ void set() {
 }
 
 void ledBlink() {
-    clear();
+    off();
     for (unsigned int i = 0 ; i < 5 ; i++) {
         GPIO_PORTF_DATA_R ^= 0x0E;
         wait(oneFifthSecond);
