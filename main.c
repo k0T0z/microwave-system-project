@@ -2,6 +2,7 @@
 #include "SW_init.c"
 #include "SW3.c"
 #include "buzzer.c"
+#include "custom_Functions.h"
 
 
 void one_sec_delay_loading() {
