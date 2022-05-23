@@ -77,3 +77,48 @@ int timer(int seconds)
   return main();
 }
 
+void printdata()
+{
+  LCDcommand(Clear); // clear screen
+  LCDcus('G');       // prints custom character "Sand timer"
+  char buffer[6];
+  sprintf(buffer, "%02d:%02d", minute, second); // send a formatted string to buffer
+  LCDpos(0, 5);                                 // control the position on LCD
+  LCDstring(buffer);                            // print the string.
+  return;
+}
+
+void selection() // timer functions
+{
+  while (1)
+  {
+    while (get_SW1() && get_SW2() && get_SW3()) // as long as timer is in pause state blink
+    {
+      ledBlink();
+    }
+
+    if (get_SW1() && !get_SW2() && get_SW3()) // resume when sw2 is pressed and door closed
+    {
+      minute = currentmin; // continue from saved value
+      second = currentsec;
+      flag = 0;
+      break;
+    }
+    else if (get_SW2() && !get_SW1() || !get_SW3()) // pause when sw1 is pressed or when door opened
+    {
+      currentmin = minute; // save last value to global variable
+      currentsec = second;
+      flag = 1;
+      delayms(200); // debounce the switch to differentiate 1st and second press
+      break;
+    }
+    else if (get_SW3() && !get_SW1() && !get_SW2()) // clear
+    {
+      minute = second = 0;
+      flag = 1;
+      printdata();
+      break;
+    }
+  }
+  return;
+}
