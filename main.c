@@ -89,7 +89,37 @@ int main() {
             
 /* ================================================================================================================================================================ */
         case Beef:
-            
+            // getting a valid weight
+            LCDcommand(Clear); // clear the screen 
+            LCDstring("Beef weight?"); 
+            delayms(2000);
+						while(1){
+							key = getchar();
+								if (key != 0)
+										{
+											temp = check_Input(key);
+											if (temp == 1){            // as 1 stands for beef in the keypad
+												currentState = Beef;   // channging the current statr to beef
+												break;
+											}	
+											else{
+												while(key == 0){key = getchar();}  // this 
+												LCDcommand(Clear);      // clear the screen 
+												LCDdata(key);
+												key -= 48;
+												delayms(5000);          // delay for 5 seconds  
+												time = 30 * key;
+												 if(get_SW3()){
+														timer(time);    // set timer for the current time 
+													  break;
+													}
+											}
+										}
+									}
+									break;
+						
+					
+			
 
 /* ================================================================================================================================================================ */
         case Chicken:
