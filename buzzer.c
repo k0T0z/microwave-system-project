@@ -1,12 +1,10 @@
 #include "tm4c123gh6pm.h"
-#include "delay.c"
 
 //Initialize Buzzer in PORT A3
 
 void buzzer_init(){
     SYSCTL_RCGCGPIO_R  |= 0x01; // Enable PortA
     while ((SYSCTL_PRGPIO_R &0x01)==0); //wait
-    GPIO_PORTA_LOCK_R = 0x4C4F434B;
     GPIO_PORTA_CR_R |= 0x08;   //bit 3  2  1  0
     GPIO_PORTA_AMSEL_R &= ~0x08;   //8  4  2  1
     GPIO_PORTA_PCTL_R &= ~0x0000F000;
