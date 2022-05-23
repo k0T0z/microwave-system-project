@@ -89,6 +89,33 @@ int main() {
             
 /* ================================================================================================================================================================ */
         case Beef:
+        // getting a valid weight
+            LCDcommand(Clear);
+            LCDstring("Beef weight?");
+            delayms(2000);
+						while(1){
+							key = getchar();
+								if (key != 0){
+											temp = check_Input(key);
+											if (temp == 1){
+												currentState = Beef;
+												break;
+											}	
+											else{
+												while(key == 0){key = getchar();}
+												LCDcommand(Clear);
+												LCDdata(key);
+												key -= 48;
+												delayms(5000);
+												time = 30 * key;
+												 if(get_SW3()){
+														timer(time);
+													  break;
+													}
+											}
+									}
+								}
+				break;
             
 
 /* ================================================================================================================================================================ */
