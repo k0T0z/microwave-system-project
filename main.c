@@ -373,8 +373,15 @@ int main() {
 			}
 			break;
 		
-			
- 
+/* ================================================================================================================================================================ */			
+ 	case Cooking:
+		while (1)
+		{
+			timer(time); // calls the timer function to countdown and takes the time in seconds as a parameter
+			break;
+		}
+		currentState = IDLE; // when finished return to IDLE state
+		break;
 /* ================================================================================================================================================================ */
         default: printf("");
 
