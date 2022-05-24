@@ -18,6 +18,7 @@ connected in the model as shown below
 
 A switch statement which contains some of the states literally
 
+```
 switch (currentState) {
   case IDLE:
     // code
@@ -32,6 +33,7 @@ switch (currentState) {
   case COOKING:
     // code
 }
+```
 
 Each case contains a specific functionality in main.c
 
