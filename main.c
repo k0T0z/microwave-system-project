@@ -31,13 +31,13 @@ enum state
 
 
 int main() {
-	unsigned char input;                  // keypad data will be passed here
-    unsigned char currentState = IDLE;    // initialised to IDLE state
-    int time = 0;                         // time in seconds
-    unsigned int weight = 0;              // weight used in Beef and Chicken states
-    char s[5] = {'0', '0', ':', '0', '0'};
-	unsigned char key;
-	unsigned int temp;
+	unsigned char input;			   // keypad data will be passed here
+	unsigned char currentState = IDLE; // initialised to IDLE state
+	int time = 0;					   // time in seconds
+	unsigned int weight = 0;		   // weight used in Beef and Chicken states
+	char s[5] = {'0', '0', ':', '0', '0'}; // array s[] that will be used in Custom state
+	unsigned char key; // variable that holds the data entered on the keypad
+	unsigned int temp; // temp variable that holds return value from error functions 
 	buzzer_init();
 	LCDinit();
 	keypadinit();
@@ -49,33 +49,44 @@ int main() {
 		switch (currentState) {
 /* ================================================================================================================================================================ */
         case IDLE:                        // main state
-			LCDcommand(Clear);
-			LCDstring("Choose state");
-            while (1) {                   // fetching pressed key from keypad
-                input = getchar();
-                if (input != 0) {         // getchar() returns 0 if nothing is pressed so if the return is not zero break out of the loop
-                    LCDcommand(Clear);
-                    break;                // you can add msg to the user to  press a key
-                }
-            }
-            if (input == 'A') {
-        	    currentState = Popcorn;
-            }
-            else if (input == 'B') {
-                currentState = Beef;
-            }
-            else if (input == 'C') {
-                currentState = Chicken;
-            }
-            else if (input == 'D') {
-                currentState = Custom;
-            }
-            else {
-                LCDstring("Err");
-                delayms(2000);                // wait for 2 seconds
-                LCDcommand(Clear);            // clear LCD
-            }
-            break;
+		LCDcommand(Clear);
+		GPIO_PORTF_DATA_R &= ~0xE;
+		LCDpos(0, 2);
+		LCDstring("Choose state"); // display the intered string on LCD
+		while (1)
+		{ // fetching pressed key from keypad
+			input = getchar();
+			if (input != 0)
+			{
+				LCDcommand(Clear);
+				break;
+			}
+		}
+		if (input == 'A')
+		{
+			currentState = Popcorn;
+		}
+		else if (input == 'B')
+		{
+			currentState = Beef;
+		}
+		else if (input == 'C')
+		{
+			currentState = Chicken;
+		}
+		else if (input == 'D')
+		{
+			currentState = Custom;
+		}
+		else
+		{
+			LCDcus('F');
+			LCDpos(0, 6);
+			LCDstring("Err"); // display the intered string on LCD
+			delayms(2000);	   // wait for 2 seconds
+			LCDcommand(Clear); // clear LCD
+		}
+		break;
 /* ================================================================================================================================================================ */
         case Popcorn:
 		LCDcommand(Clear); // clear the screen
@@ -96,48 +107,34 @@ int main() {
             
 /* ================================================================================================================================================================ */
         case Beef:
-			LCDcommand(Clear); // clear the screen
-			LCDcus('D'); // display custom character
-			LCDpos(0, 0); // change cursor position
-			LCDstring("Beef weight?"); // display the intered string on LCD
-			delayms(2000); // delay 2 seconds
-			while (1)
-			{
-				key = getchar(); // key hold the value intered in the keypad, note: key in this state resembles the weight
-				if (key != 0) // if key contains data
-				{
-					temp = check_Input(key); // call function that returns 1 if wrong input is entered
-					if (temp == 1)
-					{
-						currentState = Beef; // return to beginning of Beef state
-						break;
-					}
-					else // valid input is entered 
-					{
-						while (key == 0) // key conatins no data
-						{
-							key = getchar(); // key hold the value intered in the keypad
-						}
-						LCDcommand(Clear); // clear the screen
-						LCDdata(key); // display the data in key on LCD
-						key -= 48; // data changed to integer
-						delayms(2000); // delay 2 seconds
-						time = 30 * key; // cooks for weight * 0.5 minutes 
-						if(!get_SW3()){ // if door is opened don't change state to cooking
-							while(!get_SW3()){ // while the door is opened
-							delayms(20); // delay to be able to check sw3 again
-							if(get_SW3()) // if door is closed change state to cooking
-								break;
-							}
-						currentState = Cooking;
-						break;
-						}
-						currentState = Cooking;
-						break;
-					}
-				}
-			}
-			break;
+			 // getting a valid weight
+            LCDcommand(Clear); // clear the screen 
+            LCDstring("Beef weight?"); 
+            delayms(2000);
+						while(1){
+							key = getchar();
+								if (key != 0)
+										{
+											temp = check_Input(key);
+											if (temp == 1){            // as 1 stands for beef in the keypad
+												currentState = Beef;   // channging the current statr to beef
+												break;
+											}	
+											else{
+												while(key == 0){key = getchar();}  // this 
+												LCDcommand(Clear);      // clear the screen 
+												LCDdata(key);
+												key -= 48;
+												delayms(5000);          // delay for 5 seconds  
+												time = 30 * key;
+												 if(get_SW3()){
+														timer(time);    // set timer for the current time 
+													  break;
+													}
+											}
+										}
+									}
+									break;
 						
 					
 			
