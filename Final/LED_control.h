@@ -1,0 +1,10 @@
+void led_Init(void);
+void red();
+void blue();
+void green();
+void off();
+void set();
+void portf_Write(unsigned char data);
+void ledBlink();
+int ledBlink_Once();
+void ledbuzzer();
