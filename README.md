@@ -4,6 +4,7 @@ For main structure by saifkandil
 
 Our state model contains 7 different states which are:
 
+```
 1 - IDLE
 2 - POPCORN
 3 - BEEF
@@ -11,6 +12,7 @@ Our state model contains 7 different states which are:
 5 - CUSTOM
 6 - COOKING
 7 - PAUSE 
+```
 
 connected in the model as shown below
 
