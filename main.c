@@ -78,16 +78,21 @@ int main() {
             break;
 /* ================================================================================================================================================================ */
         case Popcorn:
-			LCDcommand(Clear);                // clear the screen
-            LCDstring("Popcorn");
-			while(1){
-				if(!get_SW2() && get_SW3()) { // if sw2 is pressed (start) and sw3 is not pressed (door closed)
-					delayms(2000);
-					timer(60);
-					break;
-				}	
-			} 
-			break;
+		LCDcommand(Clear); // clear the screen
+		LCDcus('B'); // display custom character
+		LCDpos(0, 4); // change cursor position
+		LCDstring("Popcorn"); // display the intered string on LCD
+		while (1)
+		{
+			if (!get_SW2() && get_SW3()) // if sw2 is pressed and door is closed start cooking
+			{
+				delayms(2000); // delay so that the pressed sw2 doesn't interfere in the timer function
+				time = 60; // cooks for 60 second
+				currentState = Cooking;
+				break;
+			}
+		}
+		break;
             
 /* ================================================================================================================================================================ */
         case Beef:
