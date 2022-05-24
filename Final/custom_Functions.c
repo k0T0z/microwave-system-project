@@ -6,8 +6,8 @@
         if (!(test >= 48 && test <= 57)){ // check if input is not between 0 and 9
             LCDcommand(Clear); // clear screen
             LCDstring("Err"); // display enterd string on LCD 
-			delayms(2000); // delay for 2 second
-			return 1; // return 1 to temp in main if there is an error
+	    delayms(2000); // delay for 2 second
+	    return 1; // return 1 to temp in main if there is an error
         }else{
             return 0; // return 0 to temp in main if there is no error
         }
@@ -18,9 +18,9 @@
         int test = (int)(input); // change char to int
         if (test >= 51){ // check if input >= 3
             LCDcommand(Clear); // clear screen
-			LCDstring("Err"); // display enterd string on LCD 
-			delayms(2000); // delay for 2 second
-			return 1; // return 1 to temp in main if there is an error
+	    LCDstring("Err"); // display enterd string on LCD 
+	    delayms(2000); // delay for 2 second
+	    return 1; // return 1 to temp in main if there is an error
         }else{
             return 0; // return 0 to temp in main if there is no error
         }
@@ -42,9 +42,9 @@ int time_to_second(unsigned char arr[]){
         int test = (int)(input); // change char to int
         if (!(test >= 49 && test <= 57)){ // check if input is not between 1 and 9
             LCDcommand(Clear); // clear screen
-			LCDstring("Err"); // display enterd string on LCD 
-			delayms(2000); // delay for 2 second
-			return 1; // return 1 to temp in main if there is an error
+	    LCDstring("Err"); // display enterd string on LCD 
+	    delayms(2000); // delay for 2 second
+	    return 1; // return 1 to temp in main if there is an error
         }else{
             return 0; // return 0 to temp in main if there is no error
         }
