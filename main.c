@@ -1,8 +1,9 @@
 #include "LCDKeypad.h"
-#include "SW_init.c"
-#include "SW3.c"
-#include "buzzer.c"
+#include "timer.h"
+#include "buzzer.h"
 #include "custom_Functions.h"
+#include "LED_control.h"
+#include "SW_init.h"
 
 
 void one_sec_delay_loading() {
