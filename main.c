@@ -5,19 +5,6 @@
 #include "LED_control.h"
 #include "SW_init.h"
 
-
-void one_sec_delay_loading() {
-	off(); // for turning all the leds off
-	red(); // turning red led on
-	wait(partOfSecond);
-	off();
-	blue();
-	wait(partOfSecond);
-	off();
-	green();
-	wait(part2OfSecond);
-}
-
 enum state
 {
     IDLE,
@@ -25,8 +12,7 @@ enum state
     Beef,
     Chicken,
     Custom,
-    Cooking,
-    Pause
+    Cooking
 };
 
 
