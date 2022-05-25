@@ -14,6 +14,20 @@ Our state model contains 7 different states which are:
 7 - PAUSE 
 ```
 
+They're defined in main.c as enum called "state"
+
+```
+enum state
+{
+    IDLE,
+    Popcorn,
+    Beef,
+    Chicken,
+    Custom,
+    Cooking
+};
+```
+
 connected in the model as shown below
 
 ![image](https://user-images.githubusercontent.com/74428638/170123046-62f1064f-20d5-4d7a-9b2a-4c93a230cf8e.png)
@@ -39,10 +53,49 @@ switch (currentState) {
 
 Each case contains a specific functionality in main.c
 
-For IDLE, it contains code that fetches input from Keypad
-For POPCORN, it conatins code for popcorn program
-For BEEF, it conatins code for beef program
-For CHICKEN, it conatins code for chicken program
-For CUSTOM, it conatins code for custom program
-For COOKING, it conatins code for timer and counting down algorithms
+For IDLE, it contains code that fetches input from Keypad. For POPCORN, it conatins code for popcorn program. For BEEF, it conatins code for beef program. For CHICKEN, it conatins code for chicken program. For CUSTOM, it conatins code for custom program. For COOKING, it conatins code for timer and counting down algorithms.
+
+States are switched by changing the value of the switch case variable which is
+
+```
+unsigned char currentState = IDLE;
+```
+Its initial value is IDLE by default and its value is updated in IDLE state then switch case is closed and start again - thanks to our external while loop - but now it will enter the switch in another case as currentState variable in updated
+
+```
+if (input == 'A')
+		{
+			currentState = Popcorn;
+		}
+		else if (input == 'B')
+		{
+			currentState = Beef;
+		}
+		else if (input == 'C')
+		{
+			currentState = Chicken;
+		}
+		else if (input == 'D')
+		{
+			currentState = Custom;
+		}
+		else
+		{
+			LCDcus('F');
+			LCDpos(0, 6);
+			LCDstring("Err"); // display the intered string on LCD
+			delayms(2000);	   // wait for 2 seconds
+			LCDcommand(Clear); // clear LCD
+		}
+```
+
+According to pressed key on the Keypad, the currentState variable will be updated then enter the desired state.
+each state contains some algorithms that deal with our LCD like:
+```
+LCDcommand(command); // For sending commands to LCD like clearing screen ... etc
+```
+```
+LCDcus(char); // For printing custom characters on LCD like popcorn icon
+```
+And many many more
 
