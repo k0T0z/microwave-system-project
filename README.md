@@ -63,30 +63,25 @@ unsigned char currentState = IDLE;
 Its initial value is IDLE by default and its value is updated in IDLE state then switch case is closed and start again - thanks to our external while loop - but now it will enter the switch in another case as currentState variable in updated
 
 ```
-if (input == 'A')
-		{
-			currentState = Popcorn;
-		}
-		else if (input == 'B')
-		{
-			currentState = Beef;
-		}
-		else if (input == 'C')
-		{
-			currentState = Chicken;
-		}
-		else if (input == 'D')
-		{
-			currentState = Custom;
-		}
-		else
-		{
-			LCDcus('F');
-			LCDpos(0, 6);
-			LCDstring("Err"); // display the intered string on LCD
-			delayms(2000);	   // wait for 2 seconds
-			LCDcommand(Clear); // clear LCD
-		}
+if (input == 'A') {
+	currentState = Popcorn;
+}
+else if (input == 'B') {
+	currentState = Beef;
+}
+else if (input == 'C') {
+	currentState = Chicken;
+}
+else if (input == 'D') {
+	currentState = Custom;
+}
+else {
+	LCDcus('F');
+	LCDpos(0, 6);
+	LCDstring("Err");
+	delayms(2000);
+	LCDcommand(Clear);
+}
 ```
 
 According to pressed key on the Keypad, the currentState variable will be updated then enter the desired state.
