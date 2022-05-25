@@ -16,7 +16,7 @@ Our state model contains 7 different states which are:
 
 They're defined in main.c as enum called "state"
 
-```
+```c
 enum state
 {
     IDLE,
@@ -34,7 +34,7 @@ connected in the model as shown below
 
 A switch statement which contains some of the states literally
 
-```
+```c
 switch (currentState) {
   case IDLE:
     // code
@@ -57,12 +57,12 @@ For IDLE, it contains code that fetches input from Keypad. For POPCORN, it conat
 
 States are switched by changing the value of the switch case variable which is
 
-```
+```c
 unsigned char currentState = IDLE;
 ```
 Its initial value is IDLE by default and its value is updated in IDLE state then switch case is closed and start again - thanks to our external while loop - but now it will enter the switch in another case as currentState variable in updated
 
-```
+```c
 if (input == 'A') {
 	currentState = Popcorn;
 }
@@ -86,10 +86,10 @@ else {
 
 According to pressed key on the Keypad, the currentState variable will be updated then enter the desired state.
 each state contains some algorithms that deal with our LCD like:
-```
+```c
 LCDcommand(command); // For sending commands to LCD like clearing screen ... etc
 ```
-```
+```c
 LCDcus(char); // For printing custom characters on LCD like popcorn icon
 ```
 And many many more
