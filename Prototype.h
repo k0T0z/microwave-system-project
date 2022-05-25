@@ -6,7 +6,7 @@
 #define RW 0x2     // PORT B Pin 1
 #define Enable 0x4 // PORT B Pin 2
 
-#define Clear 0x1
+#define clearScreen 0x1 // changed name from Clear to clearScreen for bug fixes by saifkandil
 #define Cursorinit 0x80
 #define Secondline 0xC0
 #define Wakeup 0x30
@@ -27,10 +27,10 @@ void LCDinit(void);
 void LCDstring(unsigned char *str, unsigned char len);
 void LCDcus(void);
 void LCDpos(uint8_t col, uint8_t row);
-
+void countdown(uint32_t time);
 unsigned char keypress(void);
 void keypadinit(void);
 unsigned char getkey(void);
 unsigned char getchar(void);
-
-int Intstr(unsigned char *str, unsigned char len);
+unsigned char *Lcdshift(void);
+int Intstr(unsigned char *str);
