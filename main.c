@@ -93,34 +93,48 @@ int main() {
             
 /* ================================================================================================================================================================ */
         case Beef:
-			 // getting a valid weight
-            LCDcommand(Clear); // clear the screen 
-            LCDstring("Beef weight?"); 
-            delayms(2000);
-						while(1){
-							key = getchar();
-								if (key != 0)
-										{
-											temp = check_Input(key);
-											if (temp == 1){            // as 1 stands for beef in the keypad
-												currentState = Beef;   // channging the current statr to beef
-												break;
-											}	
-											else{
-												while(key == 0){key = getchar();}  // this 
-												LCDcommand(Clear);      // clear the screen 
-												LCDdata(key);
-												key -= 48;
-												delayms(5000);          // delay for 5 seconds  
-												time = 30 * key;
-												 if(get_SW3()){
-														timer(time);    // set timer for the current time 
-													  break;
-													}
-											}
-										}
-									}
-									break;
+			LCDcommand(Clear); // clear the screen
+			LCDcus('D'); // display custom character
+			LCDpos(0, 0); // change cursor position
+			LCDstring("Beef weight?"); // display the intered string on LCD
+			delayms(2000); // delay 2 seconds
+			while (1)
+			{
+				key = getchar(); // key hold the value intered in the keypad, note: key in this state resembles the weight
+				if (key != 0) // if key contains data
+				{
+					temp = check_Input(key);	 // call function that returns 1 if wrong input is entered
+					if (temp == 1)
+					{
+						currentState = Beef; 	// return to beginning of Beef state
+						break;
+					}
+					else 						// valid input is entered 
+					{
+						while (key == 0) 		// key conatins no data
+						{
+							key = getchar(); 	// key hold the value intered in the keypad
+						}
+						LCDcommand(Clear);		 // clear the screen
+						LCDdata(key); 			// display the data in key on LCD
+						key -= 48; 				// data changed to integer
+						delayms(2000); 			// delay 2 seconds
+						time = 30 * key; 		// cooks for weight * 0.5 minutes 
+						if(!get_SW3()){ 		// if door is opened don't change state to cooking
+							while(!get_SW3()){ // while the door is opened
+							delayms(20); 		// delay to be able to check sw3 again
+							if(get_SW3()) 		// if door is closed change state to cooking
+								break;
+							}
+						currentState = Cooking;
+						break;
+						}
+						currentState = Cooking;
+						break;
+					}
+				}
+			}
+			break;
 						
 					
 			
